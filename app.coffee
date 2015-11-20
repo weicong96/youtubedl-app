@@ -33,5 +33,11 @@ class App
                 @Models.Users = db.collection "users"
 
                 search = new Search(@)
+    sendContent : (req, res,content)=>
+        res.status 200
+        return res.json content
+    sendError: (req, res, error, content)=>
+        res.status error
+        return res.end content
 new App()
 module.exports = App
