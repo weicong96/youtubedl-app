@@ -2,6 +2,7 @@ config = require("./config")
 request = require("request")
 express = require("express")
 mongodb = require("mongodb")
+bodyParser = require "body-parser"
 moment = require("moment")
 fs = require("fs")
 q = require("q")
@@ -12,8 +13,8 @@ class App
     Models : {}
     constructor : (@App)->
         @router = new express()
-        @router.use express.json()
-        @router.use express.urlencoded()
+        @router.use bodyParser.urlencoded({extended : true})
+        @router.use bodyParser.json {limit : '50mb'}
 
         @config = config
         @request = request
