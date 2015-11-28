@@ -9,6 +9,7 @@ q = require("q")
 
 Search = require("./routes/search")
 SavedChannels = require "./routes/savedchannels"
+User = require "./routes/user"
 class App
     Models : {}
     constructor : (@App)->
@@ -34,6 +35,7 @@ class App
 
                 search = new Search(@)
                 savedChannels = new SavedChannels(@)
+                user = new User(@)
     sendContent : (req, res,content)=>
         res.status 200
         return res.json content
