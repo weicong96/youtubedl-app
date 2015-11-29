@@ -30,7 +30,8 @@ angular.module('youtube-dl')
   $scope.login = function(){
     Accounts.login($scope.user).then(function(response){
       var body = response.data;
-      Accounts.setLoginCookie(body);
+      Accounts.setLoginCookie(body.accesstoken);
+      console.log(Accounts.getLoginCookie());
     });
   }
 })
@@ -69,4 +70,5 @@ angular.module('youtube-dl')
       $scope.showAlert(title, message);
     });
   }
-});
+})
+.controller("ChannelsController", function($scope, Channel){});

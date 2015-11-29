@@ -1,53 +1,4 @@
 angular.module('youtube-dl')
-
-.factory('Chats', function() {
-  // Might use a resource here that returns a JSON array
-
-  // Some fake testing data
-  var chats = [{
-    id: 0,
-    name: 'Ben parrow',
-    lastText: 'You on your way?',
-    face: 'img/ben.png'
-  }, {
-    id: 1,
-    name: 'Max Lynx',
-    lastText: 'Hey, it\'s me',
-    face: 'img/max.png'
-  }, {
-    id: 2,
-    name: 'Adam Bradleyson',
-    lastText: 'I should buy a boat',
-    face: 'img/adam.jpg'
-  }, {
-    id: 3,
-    name: 'Perry Governor',
-    lastText: 'Look at my mukluks!',
-    face: 'img/perry.png'
-  }, {
-    id: 4,
-    name: 'Mike Harrington',
-    lastText: 'This is wicked good ice cream.',
-    face: 'img/mike.png'
-  }];
-
-  return {
-    all: function() {
-      return chats;
-    },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
-    },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
-          return chats[i];
-        }
-      }
-      return null;
-    }
-  };
-})
 .constant("API", "http://localhost:4000")
 .factory("Accounts", function($resource,$http, API,Cookie){
   return {
@@ -62,16 +13,44 @@ angular.module('youtube-dl')
     }, 
     removeLoginCookie : function(){
       Cookie.deleteCookie("accesstoken");
+    },
+    getLoginCookie : function(){
+      return Cookie.getCookie("accesstoken");
     }
   };
 })
-.factory("Cookie", function(ipCookie){
+.factory("Cookie", function(localStorageService){
+  var storage = null;
+  if(localStorageService.isSupported){
+    storage = localStorageService;
+  }else if(localStorageService.cookie.isSupported){
+    storage = localStorageService.cookie;
+  }
+
   return {
     setCookie : function(key, value){
-      ipCookie(key, value);
+      storage.set(key, value);
     },
     deleteCookie : function(key){
-      ipCookie.remove(key);
+      storage.remove(key);
+    },
+    getCookie : function(key){
+      return storage.get(key);
     }
   };
+})
+.factory("HttpInterceptor", function($q, Cookie){
+  return {
+    response : function(response){
+      var accessToken = Cookie.getCookie("accesstoken");
+      if(accessToken != ""){
+        response.config['headers']['Access-Token'] = accessToken;
+      }
+      return response;
+    }
+  };
+})
+.factory("Channel", function($q, $http, $resource, API){
+  return $resource(API+"/");
+
 });
