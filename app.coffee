@@ -2,14 +2,19 @@ config = require("./config")
 request = require("request")
 express = require("express")
 mongodb = require("mongodb")
+ObjectID = require("mongodb").ObjectID
+
+
 bodyParser = require "body-parser"
 moment = require("moment")
 fs = require("fs")
 q = require("q")
 
+
 Search = require("./routes/search")
 SavedChannels = require "./routes/savedchannels"
 User = require "./routes/user"
+
 class App
     Models : {}
     constructor : (@App)->
@@ -20,6 +25,7 @@ class App
         @config = config
         @request = request
         @moment = moment
+        @ObjectID = ObjectID
 
         @router.use (req, res, next)=>
             res.setHeader "Access-Control-Allow-Origin", "*"
@@ -32,6 +38,7 @@ class App
         mongodb.connect config.mongodb , (err,db)=>
             if !err
                 @Models.Users = db.collection "users"
+                @Models.Channels = db.collection "channels"
 
                 search = new Search(@)
                 savedChannels = new SavedChannels(@)
@@ -42,5 +49,13 @@ class App
     sendError: (req, res, error, content)=>
         res.status error
         return res.end content
+    getCurrentUser : (_accesstoken)=>
+        defer = q.defer();
+        @Models.Users.findOne {accesstoken : _accesstoken}, (err, doc)=>
+            if !err and doc
+                defer.resolve doc
+            else 
+                defer.reject {}
+        return defer.promise
 new App()
 module.exports = App
