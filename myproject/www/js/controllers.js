@@ -26,12 +26,12 @@ angular.module('youtube-dl')
     enableFriends: true
   };
 })
-.controller("LoginController" , function($scope,Accounts,Accounts){
+.controller("LoginController" , function($scope,Accounts,Accounts, $state){
   $scope.login = function(){
     Accounts.login($scope.user).then(function(response){
       var body = response.data;
       Accounts.setLoginCookie(body.accesstoken);
-      console.log(Accounts.getLoginCookie());
+      $state.go("tab.channels");
     });
   }
 })
@@ -71,4 +71,7 @@ angular.module('youtube-dl')
     });
   }
 })
-.controller("ChannelsController", function($scope, Channel){});
+.controller("ChannelsController", function($scope, Channel){
+
+  console.log("reach to tab channels");
+});
