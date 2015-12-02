@@ -1,7 +1,7 @@
 class Search
     constructor : (@App)->
     	@App.router.get "/search", @searchItems
-    	@App.router.get "/channel", @getVideosFromChannel
+    	@App.router.get "/videoschannel", @getVideosFromChannel
     getVideosFromChannel : (req, res)=>
     	pageToken = ""
     	if !req.query.channelId
@@ -16,7 +16,7 @@ class Search
     			else
     				body = JSON.parse(body)
     				playListId = body['items'][0]['contentDetails']['relatedPlaylists']['uploads']
-    				playListUrl = "https://www.googleapis.com/youtube/v3/playlistItems?key=#{@App.config['youtube']['key']}&prettyPrint=false&part=contentDetails,snippet&playlistId=#{playListId}"
+    				playListUrl = "https://www.googleapis.com/youtube/v3/playlistItems?maxResults=10&key=#{@App.config['youtube']['key']}&prettyPrint=false&part=contentDetails,snippet&playlistId=#{playListId}"
     				
     				if pageToken
     					playListUrl += "&pageToken=#{pageToken}"
@@ -28,8 +28,8 @@ class Search
     						for video in items
     							extractVideo = 
     								title : video['snippet']['title']
-    								thumbnail : video['snippet']['thumbnails']['default']['url']
-    								videoId : video['contentDetails']['videoId']
+    								image : video['snippet']['thumbnails']['default']['url']
+    								id : video['contentDetails']['videoId']
     							
     							videosDl.push extractVideo
     						return @App.sendContent req, res, videosDl

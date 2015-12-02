@@ -31,7 +31,7 @@ angular.module('youtube-dl')
     Accounts.login($scope.user).then(function(response){
       var body = response.data;
       Accounts.setLoginCookie(body.accesstoken);
-      $state.go("tab.channels");
+      $state.go("tab.search");
     });
   }
 })
@@ -72,6 +72,85 @@ angular.module('youtube-dl')
   }
 })
 .controller("ChannelsController", function($scope, Channel){
+  Channel.query(function(res){
+    console.log(res);
+  });
+}).controller("SearchController", function($scope, $ionicPopup,$state,$stateParams, Search){
+  $scope.data = {};
+        $scope.searchResult = [];
+  $scope.search = function(){
+    var myPopup = $ionicPopup.show({
+      template: '<input type="text" ng-model="data.searchText">',
+      title: 'What are u looking for?',
+      subTitle: 'Type what you would on Youtube',
+      scope: $scope,
+      buttons: [
+        { text: 'Cancel' },
+        {
+          text: '<b>Search</b>',
+          type: 'button-positive'
+        }
+      ]
+    });
+    myPopup.then(function(res) {
+      console.log($scope.data.searchText);
 
-  console.log("reach to tab channels");
+      //Search execute here
+      Search.search($scope.data.searchText).then(function(results){
+        $scope.searchResult = [];
+        results['data'].forEach(function(result){
+          var video = {
+            image : result['snippet']['thumbnails']['default']['url'],
+            type : ((result['id']['kind'] == "youtube#video") ? "video" : "channel"),
+            title : result['snippet']['title']
+          };
+          video['id'] = result['id'][video['type']+"Id"];
+
+          console.log(result);
+          $scope.searchResult.push(video);
+          console.log($scope.searchResult);
+        });
+        console.log(results);
+      });
+      myPopup.close();
+    });}
+  $scope.nextPage = function(result){
+    console.log(result);
+    if(result['type'] == "channel"){
+      $scope.selections = [
+        "Browse videos from channel",
+        "Add Channel as daily download channel"
+      ];
+      var myPopup = $ionicPopup.show({
+        template: '<ion-list><ion-item ng-repeat="(index,selection) in selections" on-tap="selectOptions(index)">{{ selection }}</ion-item></ion-list>',
+        title: 'Enter Wi-Fi Password',
+        scope: $scope,
+        buttons: [
+          {},
+          {}
+        ]
+      });
+      $scope.selectOptions = function(index){
+        $scope.selectItemIndex = index;
+        if($scope.selectItemIndex == 0){
+          $state.go("tab.searchWithChannelId", {channelId : result['id']});
+          myPopup.close();
+        }
+      }
+
+    }else{
+
+    }
+  }
+
+  if($stateParams.channelId){
+    $scope.channelId = $stateParams.channelId;
+    Search.getVideoFromChannel($scope.channelId).then(function(results){
+      console.log(results);
+      results['data'].forEach(function(result){
+        $scope.searchResult.push(result);
+      });
+    });
+  }
 });
+

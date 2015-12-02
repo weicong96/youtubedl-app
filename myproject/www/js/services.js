@@ -41,16 +41,38 @@ angular.module('youtube-dl')
 })
 .factory("HttpInterceptor", function($q, Cookie){
   return {
-    response : function(response){
+    request : function(request){
       var accessToken = Cookie.getCookie("accesstoken");
       if(accessToken != ""){
-        response.config['headers']['Access-Token'] = accessToken;
+        request['headers']['Access-Token'] = accessToken;
       }
-      return response;
+      return request;
     }
   };
 })
-.factory("Channel", function($q, $http, $resource, API){
-  return $resource(API+"/");
-
+.factory("Channel", function($q, $http, $resource, API, HttpInterceptor){
+  return $resource(API+"/channel/:channelID", {
+    channelID : "@channelID"
+  }, {
+    /*"query" :{
+      method : "GET",
+      isArray : true,
+      params : {},
+      interceptor : {
+        request : function(response){
+          HttpInterceptor.response(response);
+        }
+      }
+    }*/
+  });
+})
+.factory("Search", function(API, $http){
+  return {
+    search : function(text){ 
+      return $http({method : "GET", url : API+"/search?query="+text });
+    },
+    getVideoFromChannel : function(channelID){
+      return $http({method : "GET", url : API+"/videoschannel?channelId="+channelID });
+    }
+  }
 });

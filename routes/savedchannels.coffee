@@ -1,7 +1,9 @@
 class SavedChannels
 	constructor : (@App)->
-		@App.router.get "/savechannel", @getChannelsForUser
+		@App.router.get "/channel", @getChannelsForUser
+		@App.router.post "/channel", @postChannel
+	postChannel : (req, res)=>
+		#@App.Models.Users.insert {}
 	getChannelsForUser : (req, res)=>
-        @App.getCurrentUser(req.query.accesstoken).then (doc)=>
-            
+		#@App.Models.
 module.exports = SavedChannels

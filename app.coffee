@@ -30,13 +30,23 @@ class App
         @router.use (req, res, next)=>
             res.setHeader "Access-Control-Allow-Origin", "*"
             res.setHeader "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, OPTIONS, DELETE"
-            res.setHeader "Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"
+            res.setHeader "Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Access-Token"
             res.setHeader "Access-Control-Allow-Credentials", true
             next()
-        @router.listen config.port , ()=>
-            console.log "Server listening on #{config.port}"
+        @router.use (req, res, next)=>
+            if req.headers['access-token']  
+                @getCurrentUser(req.headers['access-token']).then (user)=>
+                    req.user = user
+                    next()
+            else
+                next()
+        
         mongodb.connect config.mongodb , (err,db)=>
             if !err
+
+                @router.listen config.port , ()=>
+                    console.log "Server listening on #{config.port}"
+
                 @Models.Users = db.collection "users"
                 @Models.Channels = db.collection "channels"
 
@@ -51,7 +61,7 @@ class App
         return res.end content
     getCurrentUser : (_accesstoken)=>
         defer = q.defer();
-        @Models.Users.findOne {accesstoken : _accesstoken}, (err, doc)=>
+        @Models.Users.findOne {accesstoken : _accesstoken},{password : 0, salt : 0}, (err, doc)=>
             if !err and doc
                 defer.resolve doc
             else 
