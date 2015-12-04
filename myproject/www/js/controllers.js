@@ -73,9 +73,9 @@ angular.module('youtube-dl')
 })
 .controller("ChannelsController", function($scope, Channel){
   Channel.query(function(res){
-    console.log(res);
+    $scope.results = res;
   });
-}).controller("SearchController", function($scope, $ionicPopup,$state,$stateParams, Search){
+}).controller("SearchController", function($scope, $ionicPopup,$state,$stateParams, Search, Channel){
   $scope.data = {};
         $scope.searchResult = [];
   $scope.search = function(){
@@ -135,10 +135,26 @@ angular.module('youtube-dl')
         if($scope.selectItemIndex == 0){
           $state.go("tab.searchWithChannelId", {channelId : result['id']});
           myPopup.close();
+        }else if($scope.selectItemIndex == 1){
+          var channel = {
+            channelId : result['id'],
+            channel : result
+          };
+          Channel.save(channel,function(res){
+            console.log(res);
+          });
         }
       }
 
     }else{
+      //show popup to download vide
+       var alertPopup = $ionicPopup.alert({
+         title : "Download video started",
+         template : "Started downloading video"
+       });
+       alertPopup.then(function(res) {
+
+       });
 
     }
   }
@@ -152,5 +168,7 @@ angular.module('youtube-dl')
       });
     });
   }
-});
+})
+.controller("VideoController", function($scope){
 
+});

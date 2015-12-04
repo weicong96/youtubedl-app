@@ -77,6 +77,15 @@ angular.module('youtube-dl', ['ionic',"ngResource", "LocalStorageModule"])
       }
     }
   })
+  .state("tab.videos", {
+    url : '/videos',
+    views : {
+      'tab-videos' : {
+        templateUrl : 'templates/tab-videos.html',
+        controller : 'VideoController'
+      }
+    }
+  });
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');

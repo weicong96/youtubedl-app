@@ -3,7 +3,16 @@ class SavedChannels
 		@App.router.get "/channel", @getChannelsForUser
 		@App.router.post "/channel", @postChannel
 	postChannel : (req, res)=>
-		#@App.Models.Users.insert {}
+		channel =
+			channelId : req.body.channelId
+			user : req.user
+
+		@App.Models.Channels.insert channel, (err,doc)=>
+			if !err and doc
+				return @App.sendContent req, res, doc
 	getChannelsForUser : (req, res)=>
-		#@App.Models.
+		user = req.user
+		@App.Models.Channels.find({"user._id" : user['_id']}).toArray (err, doc)=>
+			if !err and doc
+				return @App.sendContent req, res, doc
 module.exports = SavedChannels
