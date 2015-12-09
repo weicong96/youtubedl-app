@@ -14,6 +14,7 @@ q = require("q")
 Search = require("./routes/search")
 SavedChannels = require "./routes/savedchannels"
 User = require "./routes/user"
+Video = require "./routes/video"
 
 class App
     Models : {}
@@ -26,7 +27,7 @@ class App
         @request = request
         @moment = moment
         @ObjectID = ObjectID
-
+        @q = q
         @router.use (req, res, next)=>
             res.setHeader "Access-Control-Allow-Origin", "*"
             res.setHeader "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, OPTIONS, DELETE"
@@ -34,13 +35,13 @@ class App
             res.setHeader "Access-Control-Allow-Credentials", true
             next()
         @router.use (req, res, next)=>
-            if req.headers['access-token']  
-                @getCurrentUser(req.headers['access-token']).then (user)=>
-                    req.user = user
-                    next()
+            if req.headers['access-token'] and req.headers['access-token'] isnt "null"
+              @getCurrentUser(req.headers['access-token']).then (user)=>
+                  req.user = user
+                  next()
             else
                 next()
-        
+
         mongodb.connect config.mongodb , (err,db)=>
             if !err
 
@@ -49,10 +50,12 @@ class App
 
                 @Models.Users = db.collection "users"
                 @Models.Channels = db.collection "channels"
+                @Models.Videos = db.collection "videos"
 
                 search = new Search(@)
                 savedChannels = new SavedChannels(@)
                 user = new User(@)
+                video = new Video(@)
     sendContent : (req, res,content)=>
         res.status 200
         return res.json content
@@ -64,7 +67,7 @@ class App
         @Models.Users.findOne {accesstoken : _accesstoken},{password : 0, salt : 0}, (err, doc)=>
             if !err and doc
                 defer.resolve doc
-            else 
+            else
                 defer.reject {}
         return defer.promise
 new App()

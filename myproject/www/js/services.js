@@ -10,7 +10,7 @@ angular.module('youtube-dl')
     },
     setLoginCookie : function(accesstoken){
       Cookie.setCookie("accesstoken", accesstoken);
-    }, 
+    },
     removeLoginCookie : function(){
       Cookie.deleteCookie("accesstoken");
     },
@@ -68,11 +68,16 @@ angular.module('youtube-dl')
 })
 .factory("Search", function(API, $http){
   return {
-    search : function(text){ 
+    search : function(text){
       return $http({method : "GET", url : API+"/search?query="+text });
     },
     getVideoFromChannel : function(channelID){
       return $http({method : "GET", url : API+"/videoschannel?channelId="+channelID });
     }
   }
+})
+.factory("Video", function(API, $resource){
+  return $resource(API+"/video/:videoId", {
+    videoId: "@videoID"
+  });
 });

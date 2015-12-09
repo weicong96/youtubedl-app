@@ -5,11 +5,11 @@ class User
 		@App.router.post "/register", @register
 		@App.router.post "/login", @login
 		@App.router.get "/accesstoken/verify", @verifyAccessToken
-		
+
 	verifyAccessToken : (req, res)=>
 		@App.Models.Users.find({accesstoken : req.query.accesstoken}).toArray (err,doc)=>
 			if !err
-				if doc 
+				if doc
 					return @App.sendContent req, res, {status : "VALID"}
 				else
 					return @App.sendContent req, res, {status : "INVALID"}
@@ -44,7 +44,7 @@ class User
 			return @App.sendError req, res,400, "NO_EMAIL_GIVEN"
 		if !req.body.password
 			return @App.sendError req, res,400, "NO_PASSWORD_GIVEN"
-		user= 
+		user=
 			email : req.body.email
 			name : req.body.name
 		@App.Models.Users.findOne {email : req.body.email }, (err, doc)=>

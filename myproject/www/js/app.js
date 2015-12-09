@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('youtube-dl', ['ionic',"ngResource", "LocalStorageModule"])
+angular.module('youtube-dl', ['ionic',"ngResource", "LocalStorageModule","ngProgress"])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -57,6 +57,11 @@ angular.module('youtube-dl', ['ionic',"ngResource", "LocalStorageModule"])
         templateUrl: 'templates/tab-channels.html',
         controller: 'ChannelsController'
       }
+    },
+    resolve : {
+      channels : function(Channel){
+        return Channel.query();
+      }
     }
   })
   .state('tab.search', {
@@ -83,6 +88,11 @@ angular.module('youtube-dl', ['ionic',"ngResource", "LocalStorageModule"])
       'tab-videos' : {
         templateUrl : 'templates/tab-videos.html',
         controller : 'VideoController'
+      }
+    },
+    resolve : {
+      videos : function(Video){
+        return Video.query();
       }
     }
   });
