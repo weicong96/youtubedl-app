@@ -1,8 +1,6 @@
 angular.module('youtube-dl')
-.controller("VideoController", function($scope,Video, videos, ngProgressFactory){
+.controller("VideoController", function($scope,Video, videos){
   $scope.videos = videos;
-  $scope.progressbar = ngProgressFactory.createInstance();
-  $scope.progressbar.start();
   
   $scope.$on( "$ionicView.enter", function( scopes, states ) {
       if( states.fromCache && states.stateName == "tab.videos" ) {

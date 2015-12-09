@@ -3,10 +3,10 @@
   <ion-content>
 
    <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="video in videos" type="item-text-wrap" on-tap="nextPage(result)">
-      
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="video in videos" on-tap="nextPage(result)">
         <img ng-src="{{video.image}}" style='inline'>
         {{ video.title }}
+      	<progress max="100" value="75"> </progress>
       </ion-item>
     </ion-list>
   </ion-content>
