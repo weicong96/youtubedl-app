@@ -9,6 +9,8 @@ bodyParser = require "body-parser"
 moment = require("moment")
 fs = require("fs")
 q = require("q")
+youtubedl = require "ytdl-core"
+mqtt = require "mqtt"
 
 
 Search = require("./routes/search")
@@ -28,6 +30,16 @@ class App
         @moment = moment
         @ObjectID = ObjectID
         @q = q
+        @mqttClient = mqtt.connect @config['mqtt']
+        @mqttClient.on "connect" , ()=>
+          @mqttClient.subscribe "download1234"
+          console.log "connect"
+          @mqttClient.publish "download1234" , "hello"
+        @mqttClient.on "message" , (topic, message)=>
+          console.log topic
+          @mqttClient.end();
+        @youtubedl = youtubedl
+
         @router.use (req, res, next)=>
             res.setHeader "Access-Control-Allow-Origin", "*"
             res.setHeader "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, OPTIONS, DELETE"

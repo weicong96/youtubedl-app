@@ -1,1 +1,19 @@
 /* Empty. Add your own CSS if you like */
+.videos-item{
+  position: relative;
+}
+.videos-item img{
+  padding:0px;
+  margin:0px;
+  border-radius:0%;
+  min-height: 50px;
+  min-width: 50px;
+  display: inline-block;
+}
+
+.videos-item div{
+  padding: 8px;
+}
+.videos-item div progress{
+  width: 100%
+}
