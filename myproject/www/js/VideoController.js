@@ -1,7 +1,11 @@
 angular.module('youtube-dl')
 .controller("VideoController", function($scope,Video, videos){
   $scope.videos = videos;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> origin/master
   $scope.$on( "$ionicView.enter", function( scopes, states ) {
       if( states.fromCache && states.stateName == "tab.videos" ) {
         Video.query(function(videos){
