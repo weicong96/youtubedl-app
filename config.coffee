@@ -3,5 +3,5 @@ module.exports = {
 	port : 4000
 	youtube :
 		key : "AIzaSyAmKdDmgA_cCpe8nIM1SWCqNf1oj3r1CxE"
-	mqtt : "mqtt://test.mosquitto.org"
+	mqtt : "mqtt://128.199.100.77"
 }

@@ -80,4 +80,50 @@ angular.module('youtube-dl')
   return $resource(API+"/video/:videoId", {
     videoId: "@videoID"
   });
+})
+.factory("VideoProgress", function(API, $q){
+  var client = null;
+  var subscribedTopic = "";
+  return {
+    connect : function(host, port, clientId, onMessageArrived){
+      var defer = $q.defer();
+      client = new Messaging.Client(host, port, clientId);
+      client.onMessageArrived = onMessageArrived;
+      var options = {
+       //connection attempt timeout in seconds
+       timeout: 3,
+ 
+        //Gets Called if the connection has successfully been established
+       onSuccess: function () {
+            defer.resolve();
+           /*client.subscribe('dlprocess/1', {qos : 2});
+            $timeout(function(){
+              var message = new Messaging.Message("Hellooo");
+            message.destinationName = "dlprocess/1";
+            message.qos = 2;
+            client.send(message);
+            console.log("send data");
+            },10* 1000);*/
+       },
+ 
+        //Gets Called if the connection could not be established
+        onFailure: function (message) {
+          defer.reject(message);
+        }
+      };
+      client.connect(options);
+      return defer.promise;
+    },
+    subscribe : function(topic){
+      client.subscribe(topic, {qos : 2});
+      subscribedTopic = topic;
+    },
+    publish : function(topic, data){
+      var message = new Messaging.Message(data);
+      message.destinationName = topic;
+      message.qos = 2;
+      client.send(message);
+    }
+
+  };
 });

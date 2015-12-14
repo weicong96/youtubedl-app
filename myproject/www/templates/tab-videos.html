@@ -3,19 +3,12 @@
   <ion-content>
 
    <ion-list>
-<<<<<<< HEAD
       <ion-item class="row videos-item" ng-repeat="video in videos"  on-tap="nextPage(result)">
         <img class='col-md-4' ng-src="{{video.image}}">
         <div class='col-md-8'>
           <p>{{ video.title }}</p>
           <progress max='100' value='73'></progress>
         </div>
-=======
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="video in videos" on-tap="nextPage(result)">
-        <img ng-src="{{video.image}}" style='inline'>
-        {{ video.title }}
-      	<progress max="100" value="75"> </progress>
->>>>>>> origin/master
       </ion-item>
     </ion-list>
   </ion-content>
