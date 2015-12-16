@@ -1,3 +1,4 @@
+fs = require "fs"
 class Video
 	constructor : (@App)->
 		@App.router.post "/video", @downloadVideo
@@ -21,17 +22,36 @@ class Video
 			return @App.sendError req, res, 400, "No title!"
 		if !req.body['id']
 			return @App.sendError req, res, 400, "No type!"
+
+
 		@App.Models.Videos.findOne {id : req.body['id']} , (err,doc)=>
 			if !err
-				if !doc
-					@App.Models.Videos.insert req.body, (err,doc)=>
-						if !err and doc
-							return @App.sendContent req, res, req.body
-						else
-							return @App.sendError req, res, 400, err
-				else
-					return @App.sendContent req, res, {"error" :"ALREADY_SAVED"}
+				#if !doc
+				#Download, return response immediately
+				hereCount = 0
+				stream = @App.youtubedl("http://www.youtube.com/watch?v=#{req.body["id"]}", {filter : (format)=>
+					return format.container is 'mp4'
+				})
+				
+				stream
+				.pipe(fs.createWriteStream("video/"+req.body['id']+".mp4"))
+				.on "drain", ()=>
+					hereCount++
+				.on "finish", ()=>
+					console.log hereCount
+				
+				@App.Models.Videos.insert req.body, (err,doc)=>
+					if !err and doc
+
+						return @App.sendContent req, res, req.body
+					else
+						return @App.sendError req, res, 400, err
+				#else
+				#	return @App.sendContent req, res, {"error" :"ALREADY_SAVED"}
 			else
 				return @App.sendError req, res, 400, err
+
+		
+		
 
 module.exports = Video

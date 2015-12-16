@@ -11,7 +11,7 @@ angular.module('youtube-dl')
   }, 1000);
   VideoProgress.connect("128.199.100.77", 8080, client_id, $scope.messageArrived).then(function(){
     VideoProgress.subscribe("dlprocess/"+client_id);
-
+    
   });
   
   $scope.$on( "$ionicView.enter", function( scopes, states ) {
