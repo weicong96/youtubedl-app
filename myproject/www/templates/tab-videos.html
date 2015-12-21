@@ -3,12 +3,12 @@
   <ion-content>
 
    <ion-list>
-      <ion-item class="row videos-item" ng-repeat="video in videos"  on-tap="nextPage(result)">
-        <img class='col-md-4' ng-src="{{video.image}}">
-        <div class='col-md-8'>
+      <ion-item class="videos-item item item-thumbnail-left" ng-repeat="video in videos"  on-tap="downloadVideo(video)">
+        <img ng-src="{{video.image}}">
+        
           <p>{{ video.title }}</p>
-          <progress max='100' value='73'></progress>
-        </div>
+          {{ video.status }}
+        
       </ion-item>
     </ion-list>
   </ion-content>

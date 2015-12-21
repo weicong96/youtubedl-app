@@ -1,5 +1,5 @@
 angular.module('youtube-dl')
-.controller("SearchController", function($scope, $ionicPopup,$state,$stateParams, Search, Channel,Video){
+.controller("SearchController", function($scope, $ionicPopup,$state,$stateParams,$rootScope, Search, Channel,Video){
   $scope.data = {};
   $scope.searchResult = [];
   var myPopup;
@@ -77,8 +77,8 @@ angular.module('youtube-dl')
         template : "Started downloading video"
       });
       alertPopup.then(function(res) {
+
         Video.save(result, function(res){
-          console.log(res);
         });
       });
 

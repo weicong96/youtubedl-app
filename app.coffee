@@ -32,14 +32,13 @@ class App
         @q = q
         @mqttClient = mqtt.connect @config['mqtt']
         @mqttClient.on "connect" , ()=>
-          @mqttClient.subscribe "download1234"
-          console.log "connect"
-          @mqttClient.publish "download1234" , "hello"
-        @mqttClient.on "message" , (topic, message)=>
-          console.log topic
-          @mqttClient.end();
-        @youtubedl = youtubedl
+            @mqttClient = @mqttClient
+            console.log "connect"
 
+        @youtubedl = youtubedl
+        #@youtubedl('http://www.youtube.com/watch?v=A02s8omM_hI')
+        #    .pipe(fs.createWriteStream('video.flv'));
+        @router.use express.static "video"
         @router.use (req, res, next)=>
             res.setHeader "Access-Control-Allow-Origin", "*"
             res.setHeader "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, OPTIONS, DELETE"

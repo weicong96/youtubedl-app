@@ -16,6 +16,12 @@ angular.module('youtube-dl')
     },
     getLoginCookie : function(){
       return Cookie.getCookie("accesstoken");
+    },
+    setUserInfo : function(user){
+      Cookie.setCookie("user", user);
+    },
+    getUserInfo : function(){
+      return Cookie.getCookie("user");
     }
   };
 })
@@ -79,12 +85,24 @@ angular.module('youtube-dl')
 .factory("Video", function(API, $resource){
   return $resource(API+"/video/:videoId", {
     videoId: "@videoID"
-  });
+  }/*,{
+    "downloadVideo" :{
+      method: "GET",
+      isArray : false,
+      url : API+"/video/download/:videoId",
+      params : {
+        videoId : "@videoId"
+      }
+    }
+  }*/);
 })
-.factory("VideoProgress", function(API, $q){
+.factory("VideoProgress", function(API, $q, $http){
   var client = null;
   var subscribedTopic = "";
   return {
+    downloadVideo : function(videoID){
+      return $http({method : "GET", url : API+"/video/download/"+videoID});
+    },
     connect : function(host, port, clientId, onMessageArrived){
       var defer = $q.defer();
       client = new Messaging.Client(host, port, clientId);
@@ -124,6 +142,5 @@ angular.module('youtube-dl')
       message.qos = 2;
       client.send(message);
     }
-
   };
 });

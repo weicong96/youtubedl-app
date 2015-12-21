@@ -3,7 +3,11 @@ angular.module('youtube-dl')
   $scope.login = function(){
     Accounts.login($scope.user).then(function(response){
       var body = response.data;
+      
       Accounts.setLoginCookie(body.accesstoken);
+      Accounts.setUserInfo(body.user);
+
+      console.log(body);
       $state.go("tab.search");
     },function(err){
       console.log(err);

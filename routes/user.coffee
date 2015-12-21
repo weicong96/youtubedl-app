@@ -30,7 +30,10 @@ class User
 							access_token = randomstr.generate()
 							@App.Models.Users.update {_id : user['_id']}, {$push : {accesstoken : access_token}}, (err,doc)=>
 								if !err and doc
-									return @App.sendContent req, res, {status : "VERIFIED", accesstoken : access_token}
+									delete user['password']
+									delete user['salt']
+									delete user['accesstoken']
+									return @App.sendContent req, res, {status : "VERIFIED", accesstoken : access_token , "user" : user}
 						else
 							return @App.sendContent req, res , {status : "UNAUTHORIZED"}
 					else
