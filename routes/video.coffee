@@ -30,7 +30,6 @@ class Video
 			return @App.sendError req, res, 400, "No video image!"
 		if !req.body['title']
 			return @App.sendError req, res, 400, "No title!"
-<<<<<<< HEAD
 		#if !req.body['id']
 		#	return @App.sendError req, res, 400, "No type!"
 
@@ -63,35 +62,14 @@ class Video
 					console.log err
 				.on "finish", ()=>
 					@App.Models.Videos.update {id : req.body['id']}, {$set : {status : "Ready to download"}},(err, doc)=>
-						if !err 
+						if !err
 							@App.mqttClient.publish "download/"+req.user['email'] , "finish_#{req.body['id']}" , {qos : 2}, (err,doc)=>
 			        			console.log doc
 						else
 							return @App.sendError req, res, 400, err
-					
+
 				#else
 				#	return @App.sendContent req, res, {"error" :"ALREADY_SAVED"}
 			else
 				return @App.sendError req, res, 400, err
-
-
-
-
-=======
-		if !req.body['id']
-			return @App.sendError req, res, 400, "No type!"
-		@App.Models.Videos.findOne {id : req.body['id']} , (err,doc)=>
-			if !err
-				if !doc
-					@App.Models.Videos.insert req.body, (err,doc)=>
-						if !err and doc
-							return @App.sendContent req, res, req.body
-						else
-							return @App.sendError req, res, 400, err
-				else
-					return @App.sendContent req, res, {"error" :"ALREADY_SAVED"}
-			else
-				return @App.sendError req, res, 400, err
-
->>>>>>> parent of 50eef36... Added download
 module.exports = Video

@@ -1,10 +1,33 @@
 angular.module('youtube-dl')
-.controller("VideoController", function($scope,$timeout,$state, $rootScope, $cordovaFile, Video, videos, VideoProgress, Accounts){
+.controller("VideoController", function($scope,$timeout,$state, $rootScope, $cordovaFile,$ionicPopup, Video, videos, VideoProgress, Accounts){
   $scope.videos = videos;
   document.addEventListener('deviceready', function(){
     console.log("Device ready!");
     $cordovaFile.getFreeDiskSpace().then(function(size){
-      console.log(size);      
+      console.log(size);
+      var popup = $ionicPopup.show({
+        template : "Space on disk: "+size,
+        title : "Enter wifi password",
+        scope : $scope,
+        buttons: [
+          { text: 'Cancel' },
+          {
+            text: '<b>Save</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              if (!$scope.data.wifi) {
+                //don't allow the user to close unless he enters wifi password
+                e.preventDefault();
+              } else {
+                return $scope.data.wifi;
+              }
+            }
+          }
+        ]
+      });
+      $timeout(function() {
+         popup.close(); //close the popup after 3 seconds for some reason
+      }, 3000);
     });
   });
   var email = Accounts.getUserInfo()['email'];
@@ -26,7 +49,7 @@ angular.module('youtube-dl')
         }else if(status === "finish"){
           $scope.videos[index].status = "Ready to download";
         }
-        
+
       }
     });
 
@@ -35,7 +58,7 @@ angular.module('youtube-dl')
   }).then(function(){
     VideoProgress.subscribe("download/"+email);
   });
-  
+
   $scope.$on( "$ionicView.enter", function( scopes, states ) {
       if( states.fromCache && states.stateName == "tab.videos" ) {
         Video.query(function(videos){
