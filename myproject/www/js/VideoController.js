@@ -13,7 +13,6 @@ angular.module('youtube-dl')
       console.log(data);
     });
   }
-<<<<<<< HEAD
   VideoProgress.connect("128.199.100.77", 8080, email, function(message){
     var payloadParts = message['payloadString'].split('_');
     var status = payloadParts[0];
@@ -35,14 +34,6 @@ angular.module('youtube-dl')
     VideoProgress.subscribe("download/"+email);//reconnect
   }).then(function(){
     VideoProgress.subscribe("download/"+email);
-=======
-  $timeout(function(){
-    VideoProgress.publish("dlprocess/"+client_id, "hello");
-  }, 1000);
-  VideoProgress.connect("128.199.100.77", 8080, client_id, $scope.messageArrived).then(function(){
-    VideoProgress.subscribe("dlprocess/"+client_id);
-
->>>>>>> parent of 50eef36... Added download
   });
   
   $scope.$on( "$ionicView.enter", function( scopes, states ) {
