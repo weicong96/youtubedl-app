@@ -1,7 +1,7 @@
 <ion-view view-title="Video">
 
   <ion-content>
-
+  	{{message}}
    <ion-list>
       <ion-item class="videos-item item item-thumbnail-left" ng-repeat="video in videos"  on-tap="downloadVideo(video)">
         <img ng-src="{{video.image}}">

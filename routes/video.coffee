@@ -11,7 +11,7 @@ class Video
 	downloadFile : (req, res)=>
 		#return res.redirect("/3UKsXCMK6Iw.mp4")
 		#Check if video belong to user
-		path = "video/"+req.params.videoId+".mp4"
+		path = "video/"+req.params.videoId
 		stat = fs.statSync(path)
 		res.writeHead 200, {
 			'Content-Type' : 'video/mpeg',

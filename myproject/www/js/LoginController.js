@@ -10,7 +10,7 @@ angular.module('youtube-dl')
       console.log(body);
       $state.go("tab.search");
     },function(err){
-      console.log(err);
+      $scope.error = err;
     });
   }
 })

@@ -1,6 +1,7 @@
 angular.module('youtube-dl')
 //.constant("API", "http://192.168.1.3:4000")
-.constant("API", "http://128.199.100.77:4000")
+.constant("API", "http://youtube.weicong.io")
+//.constant("API", "http://128.199.100.77:4000")
 .factory("Accounts", function($resource,$http, API,Cookie){
   return {
     login : function(user){
@@ -97,12 +98,13 @@ angular.module('youtube-dl')
     }
   }*/);
 })
-.factory("VideoProgress", function(API, $q, $http){
+.factory("VideoProgress", function(API, $q, $http,$cordovaFileTransfer){
   var client = null;
   var subscribedTopic = "";
   return {
     downloadVideo : function(videoID){
-      return $http({method : "GET", url : API+"/video/download/"+videoID});
+      return $cordovaFileTransfer.download(API+"/video/download/"+videoID+".mp4",cordova.file.externalDataDirectory+"/"+videoID+".mp4", {}, true);
+      //return $http({method : "GET", url : API+"/video/download/"+videoID});
     },
     connect : function(host, port, clientId, onMessageArrived){
       var defer = $q.defer();

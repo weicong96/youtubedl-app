@@ -1,35 +1,12 @@
 angular.module('youtube-dl')
-.controller("VideoController", function($scope,$timeout,$state, $rootScope, $cordovaFile,$ionicPopup, Video, videos, VideoProgress, Accounts){
+.controller("VideoController", function($scope,$timeout,$state, $rootScope, $cordovaFile,$ionicPopup,$ionicPlatform, Video, videos, VideoProgress, Accounts){
   $scope.videos = videos;
-  document.addEventListener('deviceready', function(){
-    console.log("Device ready!");
-    $cordovaFile.getFreeDiskSpace().then(function(size){
-      console.log(size);
-      var popup = $ionicPopup.show({
-        template : "Space on disk: "+size,
-        title : "Enter wifi password",
-        scope : $scope,
-        buttons: [
-          { text: 'Cancel' },
-          {
-            text: '<b>Save</b>',
-            type: 'button-positive',
-            onTap: function(e) {
-              if (!$scope.data.wifi) {
-                //don't allow the user to close unless he enters wifi password
-                e.preventDefault();
-              } else {
-                return $scope.data.wifi;
-              }
-            }
-          }
-        ]
-      });
-      $timeout(function() {
-         popup.close(); //close the popup after 3 seconds for some reason
-      }, 3000);
-    });
-  });
+  //$ionicPlatform.ready(function(){
+    //console.log("Device ready!");
+    //$cordovaFile.getFreeDiskSpace().then(function(size){
+    //  $scope.message = size;
+   // });
+  //});
   var email = Accounts.getUserInfo()['email'];
   $scope.downloadVideo = function(_video){
     VideoProgress.downloadVideo(_video['id']).then(function(data){
