@@ -1,3 +1,4 @@
+fs = require "fs"
 class Video
 	constructor : (@App)->
 		@App.router.post "/video", @downloadVideo

@@ -52,7 +52,9 @@ class App
                   next()
             else
                 next()
+        cors = require "cors"
 
+        @router.use cors()
         mongodb.connect config.mongodb , (err,db)=>
             if !err
 
