@@ -1,5 +1,5 @@
 angular.module('youtube-dl')
-.constant("API", "http://localhost:4000")
+.constant("API", "http://128.199.100.77:4000")
 .factory("Accounts", function($resource,$http, API,Cookie){
   return {
     login : function(user){
@@ -110,7 +110,7 @@ angular.module('youtube-dl')
       var options = {
        //connection attempt timeout in seconds
        timeout: 3,
- 
+
         //Gets Called if the connection has successfully been established
        onSuccess: function () {
             defer.resolve();
@@ -123,7 +123,7 @@ angular.module('youtube-dl')
             console.log("send data");
             },10* 1000);*/
        },
- 
+
         //Gets Called if the connection could not be established
         onFailure: function (message) {
           defer.reject(message);
