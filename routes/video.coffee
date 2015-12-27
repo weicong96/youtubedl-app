@@ -18,7 +18,7 @@ class Video
 
 		stream = fs.createReadStream path
 		stream.pipe res
-		stream.on "end", ()=>
+		res.on "end", ()=>
 			@App.Models.Videos.update {id : req.body['id']}, {$set : { downloaded : true , progress : 100}}, (err, doc)=>
 				if !err and doc
 					console.log "Finished response"
