@@ -3,12 +3,8 @@
   <ion-content>
   	{{message}}
    <ion-list>
-      <ion-item class="videos-item item item-thumbnail-left" ng-repeat="video in videos"  on-tap="downloadVideo(video)">
-        <img ng-src="{{video.image}}">
-        
-          <p>{{ video.title }}</p>
-          {{ video.status }}
-        
+      <ion-item class="videos-item item " ng-repeat="video in videos">
+        <video-item video="video"></video-item>
       </ion-item>
     </ion-list>
   </ion-content>

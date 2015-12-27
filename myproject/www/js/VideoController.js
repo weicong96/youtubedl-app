@@ -1,18 +1,9 @@
 angular.module('youtube-dl')
 .controller("VideoController", function($scope,$timeout,$state, $rootScope, $cordovaFile,$ionicPopup,$ionicPlatform, Video, videos, VideoProgress, Accounts){
   $scope.videos = videos;
-  //$ionicPlatform.ready(function(){
-    //console.log("Device ready!");
-    //$cordovaFile.getFreeDiskSpace().then(function(size){
-    //  $scope.message = size;
-   // });
-  //});
+  
   var email = Accounts.getUserInfo()['email'];
-  $scope.downloadVideo = function(_video){
-    VideoProgress.downloadVideo(_video['id']).then(function(data){
-      console.log(data);
-    });
-  }
+  
   VideoProgress.connect("128.199.100.77", 8080, email, function(message){
     var payloadParts = message['payloadString'].split('_');
     var status = payloadParts[0];

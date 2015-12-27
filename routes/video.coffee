@@ -9,8 +9,6 @@ class Video
 				if !err and doc
 					return @App.sendContent req, res, doc
 	downloadFile : (req, res)=>
-		#return res.redirect("/3UKsXCMK6Iw.mp4")
-		#Check if video belong to user
 		path = "video/"+req.params.videoId
 		stat = fs.statSync(path)
 		res.writeHead 200, {
@@ -20,6 +18,12 @@ class Video
 
 		stream = fs.createReadStream path
 		stream.pipe res
+		stream.on "end", ()=>
+			@App.Models.Videos.update {id : req.body['id']}, {$set : { downloaded : true , progress : 100}}, (err, doc)=>
+				if !err and doc
+					console.log "Finished response"
+				else
+					console.log err
 	getVideoForUser : (req, res)=>
 		@App.Models.Videos.find({"user._id" : req.user['_id']}).toArray (err,doc)=>
 			if !err and doc

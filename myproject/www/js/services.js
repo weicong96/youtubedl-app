@@ -98,13 +98,41 @@ angular.module('youtube-dl')
     }
   }*/);
 })
-.factory("VideoProgress", function(API, $q, $http,$cordovaFileTransfer){
+.factory("VideoProgress", function(API, $q, $http,$cordovaFile, $cordovaFileTransfer){
   var client = null;
   var subscribedTopic = "";
   return {
-    downloadVideo : function(videoID){
-      return $cordovaFileTransfer.download(API+"/video/download/"+videoID+".mp4",cordova.file.externalDataDirectory+"/"+videoID+".mp4", {}, true);
-      //return $http({method : "GET", url : API+"/video/download/"+videoID});
+    downloadVideo : function(videoID, progressCb){
+      var defer = $q.defer();
+
+      var download = function(){
+        var path = cordova.file.externalRootDirectory+"/youtubeVideos";
+        return $cordovaFileTransfer.download(API+"/video/download/"+videoID+".mp4",path+"/"+videoID+".mp4", {}, true);
+      }
+
+      $cordovaFile.checkDir(cordova.file.externalRootDirectory, "youtubeVideos").then(function(){
+        download().then(function(result){
+          defer.resolve(result);
+        },function(error){
+          defer.reject(error);
+        }, function(p){
+          progressCb(p);
+        });
+      },function(){
+        $cordovaFile.createDir(cordova.file.externalRootDirectory, "youtubeVideos", false)
+        .then(function (success) {
+          download().then(function(result){
+            defer.resolve(result);
+          },function(error){
+            defer.reject(error);
+          }, function(p){
+            progressCb(p);
+          });
+        }, function (error) {
+          defer.reject(error);
+        });
+      });
+      return defer.promise;
     },
     connect : function(host, port, clientId, onMessageArrived){
       var defer = $q.defer();

@@ -1,0 +1,6 @@
+<div class="item-thumbnail-left">
+	<img ng-src='{{video.image}}'>        
+	  <p>{{ video.title }}</p>
+	  <span ng-hide="video.progress > 0 && video.progress < 100">{{ video.status }}</span>
+	  <progress min='0' max='100' value="{{video.progress}}" ng-show="video.progress > 0 && video.progress < 100"></progress>
+</div>
